@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekendje Weg 🛒</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F5F0E8;
+    --dark: #1C1A16;
+    --green: #3D6B4F;
+    --green-light: #E8F0EB;
+    --accent: #C84B2F;
+    --muted: #8A8680;
+    --border: #DDD8CE;
+    --checked-bg: #F0EDE6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--dark);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 0 0 80px;
+  }
+
+  header {
+    background: var(--dark);
+    color: var(--cream);
+    padding: 28px 24px 22px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 26px;
+    letter-spacing: -0.5px;
+  }
+
+  .weekend-label {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: #A0A09A;
+  }
+
+  .stats {
+    font-size: 12px;
+    color: #7A7A72;
+    letter-spacing: 0.3px;
+  }
+
+  .stats span { color: #9DC4AC; font-weight: 500; }
+
+  .add-bar {
+    padding: 16px 20px;
+    background: white;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    position: sticky;
+    top: 84px;
+    z-index: 9;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  }
+
+  .add-input {
+    flex: 1;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    background: var(--cream);
+    color: var(--dark);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .add-input:focus { border-color: var(--green); }
+  .add-input::placeholder { color: var(--muted); }
+
+  .add-btn {
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    width: 42px;
+    height: 42px;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.1s;
+    flex-shrink: 0;
+  }
+  .add-btn:active { transform: scale(0.93); }
+  .add-btn:hover { background: #2F5540; }
+  .add-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .section { padding: 0 20px; margin-top: 20px; }
+
+  .section-title {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+    padding-left: 4px;
+  }
+
+  .items-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .item {
+    background: white;
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1.5px solid transparent;
+    transition: all 0.2s;
+    animation: slideIn 0.25s ease;
+    cursor: pointer;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .item:hover { border-color: var(--border); }
+  .item.checked { background: var(--checked-bg); opacity: 0.65; }
+
+  .checkbox {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    background: white;
+  }
+
+  .item.checked .checkbox { background: var(--green); border-color: var(--green); }
+
+  .checkmark { display: none; color: white; font-size: 12px; font-weight: 700; }
+  .item.checked .checkmark { display: block; }
+  .item.checked .check-ring { display: none; }
+
+  .item-text { flex: 1; font-size: 15px; font-weight: 400; line-height: 1.3; }
+  .item.checked .item-text { text-decoration: line-through; color: var(--muted); }
+
+  .delete-btn {
+    background: none;
+    border: none;
+    color: #CCC;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    transition: color 0.15s;
+    line-height: 1;
+  }
+  .delete-btn:hover { color: var(--accent); }
+
+  .empty-state { text-align: center; padding: 50px 30px; color: var(--muted); }
+  .empty-state .emoji { font-size: 40px; margin-bottom: 12px; }
+  .empty-state p { font-size: 15px; line-height: 1.6; }
+
+  .sync-indicator {
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    padding: 10px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .sync-indicator.visible { opacity: 1; }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--dark);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: transform 0.3s ease;
+    z-index: 200;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <h1>Boodschappenlijst</h1>
+    <span class="weekend-label">weekendje weg</span>
+  </div>
+  <div class="stats" id="stats">Laden…</div>
+</header>
+
+<div class="add-bar">
+  <input class="add-input" id="itemInput" placeholder="Item toevoegen…" maxlength="80">
+  <button class="add-btn" id="addBtn" onclick="addItem()">+</button>
+</div>
+
+<div class="section">
+  <div class="section-title">Te halen</div>
+  <div class="items-list" id="activeList">
+    <div class="empty-state"><div class="emoji">⏳</div><p>Lijst wordt geladen…</p></div>
+  </div>
+</div>
+
+<div class="section" id="doneSection" style="display:none; margin-top:24px;">
+  <div class="section-title">In het mandje ✓</div>
+  <div class="items-list" id="doneList"></div>
+</div>
+
+<div class="sync-indicator" id="syncIndicator">↑ opslaan…</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  const BIN_ID = '6a1978bcddf5aa59f773ec7e';
+  const MK = '$2a$10$V.vvNR5AxXCkFB8BkRtvOOJclSgV3U5LEUR4jZRHFXgo6IaDZxSIu';
+  const BASE = 'https://api.jsonbin.io/v3/b/' + BIN_ID;
+
+  let items = [];
+  let saving = false;
+
+  async function fetchItems() {
+    try {
+      const r = await fetch(BASE + '/latest', {
+        headers: { 'X-Master-Key': MK }
+      });
+      const data = await r.json();
+      items = data.record.items || [];
+      render();
+    } catch(e) {
+      showToast('Kan lijst niet laden');
+    }
+  }
+
+  async function saveItems() {
+    saving = true;
+    showSync('↑ opslaan…');
+    try {
+      await fetch(BASE, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Master-Key': MK
+        },
+        body: JSON.stringify({ items })
+      });
+      showSync('✓ opgeslagen');
+      setTimeout(() => hideSync(), 1500);
+    } catch(e) {
+      showToast('Opslaan mislukt, probeer opnieuw');
+    }
+    saving = false;
+  }
+
+  function render() {
+    const active = items.filter(i => !i.checked);
+    const done = items.filter(i => i.checked);
+
+    const stats = document.getElementById('stats');
+    if (items.length === 0) {
+      stats.innerHTML = 'Nog niets toegevoegd';
+    } else {
+      stats.innerHTML = `<span>${active.length}</span> te halen &nbsp;·&nbsp; <span>${done.length}</span> klaar`;
+    }
+
+    const activeList = document.getElementById('activeList');
+    if (active.length === 0) {
+      activeList.innerHTML = items.length === 0
+        ? `<div class="empty-state"><div class="emoji">🛒</div><p>Voeg het eerste item toe.</p></div>`
+        : `<div class="empty-state"><div class="emoji">🎉</div><p>Alles zit in het mandje!</p></div>`;
+    } else {
+      activeList.innerHTML = active.map(renderItem).join('');
+    }
+
+    const doneSection = document.getElementById('doneSection');
+    const doneList = document.getElementById('doneList');
+    if (done.length > 0) {
+      doneSection.style.display = 'block';
+      doneList.innerHTML = done.map(renderItem).join('');
+    } else {
+      doneSection.style.display = 'none';
+    }
+  }
+
+  function renderItem(item) {
+    return `
+      <div class="item ${item.checked ? 'checked' : ''}" onclick="toggleItem('${item.id}')">
+        <div class="checkbox">
+          <span class="checkmark">✓</span>
+          <span class="check-ring"></span>
+        </div>
+        <div class="item-text">${escHtml(item.text)}</div>
+        <button class="delete-btn" onclick="event.stopPropagation(); deleteItem('${item.id}')">×</button>
+      </div>`;
+  }
+
+  async function addItem() {
+    const input = document.getElementById('itemInput');
+    const text = input.value.trim();
+    if (!text || saving) return;
+
+    items.unshift({
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2),
+      text,
+      checked: false,
+      ts: Date.now()
+    });
+
+    input.value = '';
+    render();
+    await saveItems();
+    input.focus();
+  }
+
+  async function toggleItem(id) {
+    const item = items.find(i => i.id === id);
+    if (item) {
+      item.checked = !item.checked;
+      render();
+      await saveItems();
+    }
+  }
+
+  async function deleteItem(id) {
+    items = items.filter(i => i.id !== id);
+    render();
+    await saveItems();
+  }
+
+  function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  function showSync(msg) {
+    const s = document.getElementById('syncIndicator');
+    s.textContent = msg;
+    s.classList.add('visible');
+  }
+
+  function hideSync() {
+    document.getElementById('syncIndicator').classList.remove('visible');
+  }
+
+  document.getElementById('itemInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') addItem();
+  });
+
+  // Poll every 10 seconds for changes by others
+  setInterval(fetchItems, 10000);
+
+  fetchItems();
+</script>
+</body>
+  </html>
