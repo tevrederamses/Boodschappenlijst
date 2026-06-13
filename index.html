@@ -245,23 +245,30 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  const BIN_ID = '6a1978bcddf5aa59f773ec7e';
-  const MK = '$2a$10$V.vvNR5AxXCkFB8BkRtvOOJclSgV3U5LEUR4jZRHFXgo6IaDZxSIu';
-  const BASE = 'https://api.jsonbin.io/v3/b/' + BIN_ID;
+  const GIST_ID = '1d0f364639b092a13000c32bc6b598b7';
+  const TOKEN = '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';
+  const GIST_FILE = 'boodschappenlijst.json';
+  const GIST_URL = 'https://api.github.com/gists/' + GIST_ID;
 
   let items = [];
   let saving = false;
 
   async function fetchItems() {
     try {
-      const r = await fetch(BASE + '/latest', {
-        headers: { 'X-Master-Key': MK }
+      const r = await fetch(GIST_URL, {
+        headers: {
+          'Authorization': 'token ' + TOKEN,
+          'Accept': 'application/vnd.github+json'
+        }
       });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
       const data = await r.json();
-      items = data.record.items || [];
+      const file = data.files && data.files[GIST_FILE];
+      items = file ? (JSON.parse(file.content).items || []) : [];
       render();
     } catch(e) {
-      showToast('Kan lijst niet laden');
+      if (items.length === 0) render();
+      else showToast('Kan lijst niet laden');
     }
   }
 
@@ -269,13 +276,20 @@
     saving = true;
     showSync('↑ opslaan…');
     try {
-      await fetch(BASE, {
-        method: 'PUT',
+      await fetch(GIST_URL, {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'X-Master-Key': MK
+          'Authorization': 'token ' + TOKEN,
+          'Accept': 'application/vnd.github+json'
         },
-        body: JSON.stringify({ items })
+        body: JSON.stringify({
+          files: {
+            [GIST_FILE]: {
+              content: JSON.stringify({ items })
+            }
+          }
+        })
       });
       showSync('✓ opgeslagen');
       setTimeout(() => hideSync(), 1500);
@@ -293,14 +307,14 @@
     if (items.length === 0) {
       stats.innerHTML = 'Nog niets toegevoegd';
     } else {
-      stats.innerHTML = `<span>${active.length}</span> te halen &nbsp;·&nbsp; <span>${done.length}</span> klaar`;
+      stats.innerHTML = '<span>' + active.length + '</span> te halen &nbsp;·&nbsp; <span>' + done.length + '</span> klaar';
     }
 
     const activeList = document.getElementById('activeList');
     if (active.length === 0) {
       activeList.innerHTML = items.length === 0
-        ? `<div class="empty-state"><div class="emoji">🛒</div><p>Voeg het eerste item toe.</p></div>`
-        : `<div class="empty-state"><div class="emoji">🎉</div><p>Alles zit in het mandje!</p></div>`;
+        ? '<div class="empty-state"><div class="emoji">🛒</div><p>Voeg het eerste item toe.</p></div>'
+        : '<div class="empty-state"><div class="emoji">🎉</div><p>Alles zit in het mandje!</p></div>';
     } else {
       activeList.innerHTML = active.map(renderItem).join('');
     }
@@ -316,15 +330,11 @@
   }
 
   function renderItem(item) {
-    return `
-      <div class="item ${item.checked ? 'checked' : ''}" onclick="toggleItem('${item.id}')">
-        <div class="checkbox">
-          <span class="checkmark">✓</span>
-          <span class="check-ring"></span>
-        </div>
-        <div class="item-text">${escHtml(item.text)}</div>
-        <button class="delete-btn" onclick="event.stopPropagation(); deleteItem('${item.id}')">×</button>
-      </div>`;
+    return '<div class="item ' + (item.checked ? 'checked' : '') + '" onclick="toggleItem('' + item.id + '')">'
+      + '<div class="checkbox"><span class="checkmark">✓</span><span class="check-ring"></span></div>'
+      + '<div class="item-text">' + escHtml(item.text) + '</div>'
+      + '<button class="delete-btn" onclick="event.stopPropagation(); deleteItem('' + item.id + '')">×</button>'
+      + '</div>';
   }
 
   async function addItem() {
@@ -385,10 +395,8 @@
     if (e.key === 'Enter') addItem();
   });
 
-  // Poll every 10 seconds for changes by others
   setInterval(fetchItems, 10000);
-
   fetchItems();
 </script>
 </body>
-  </html>
+</html>
