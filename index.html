@@ -330,10 +330,11 @@
   }
 
   function renderItem(item) {
-    return '<div class="item ' + (item.checked ? 'checked' : '') + '" onclick="toggleItem('' + item.id + '')">'
+    const q = "'";
+return '<div class="item ' + (item.checked ? 'checked' : '') + '" onclick="toggleItem(' + q + item.id + q + ')">'
       + '<div class="checkbox"><span class="checkmark">✓</span><span class="check-ring"></span></div>'
       + '<div class="item-text">' + escHtml(item.text) + '</div>'
-      + '<button class="delete-btn" onclick="event.stopPropagation(); deleteItem('' + item.id + '')">×</button>'
+      + '<button class="delete-btn" onclick="event.stopPropagation(); deleteItem(' + q + item.id + q + ')">×</button>'
       + '</div>';
   }
 
