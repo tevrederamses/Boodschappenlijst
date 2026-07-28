@@ -243,9 +243,9 @@
   <div class="header-top">
     <div class="header-title">
       <h1>Familie Te Vrede</h1>
-      <span class="weekend-label">BBQ reünie 🍖</span>
+      <span class="weekend-label">BBQ reünie · 23 augustus 🍖</span>
     </div>
-    <a class="nav-btn" href="https://www.google.com/maps/dir/?api=1&destination=52.2949966,4.9295992" target="_blank" rel="noopener">🧭 Strandje</a>
+    <a class="nav-btn" href="https://www.google.com/maps/dir/?api=1&destination=52.2949966,4.9295992" onclick="return openNav(event)">🧭 Navigatie strandje</a>
   </div>
   <div class="stats" id="stats">Laden…</div>
 </header>
@@ -363,6 +363,17 @@
     render();
     await saveItems();
     input.focus();
+  }
+
+  function openNav(e) {
+    e.preventDefault();
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    if (isAndroid) {
+      window.location.href = 'google.navigation:q=52.2949966,4.9295992&mode=d';
+    } else {
+      window.open('https://www.google.com/maps/dir/?api=1&destination=52.2949966,4.9295992', '_blank');
+    }
+    return false;
   }
 
   async function toggleItem(id) {
