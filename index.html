@@ -57,7 +57,7 @@
     font-family: 'Fraunces', serif;
     font-style: italic;
     font-size: 14px;
-    color: #A0A09A;
+    color: rgba(245,240,232,0.88);
   }
 
   .stats {
@@ -235,9 +235,32 @@
     transition: background 0.2s;
   }
   .nav-btn:hover { background: rgba(255,255,255,0.22); }
+  .nav-btn { cursor: pointer; }
+  .header-actions { display: flex; align-items: center; gap: 8px; }
+
+  body.dark {
+    --cream: #17181B;
+    --dark: #ECE9E2;
+    --green: #4F8C63;
+    --green-light: #1F2C22;
+    --muted: #8D8B85;
+    --border: #33342F;
+    --checked-bg: #1F201C;
+  }
+  body.dark .add-bar { background: #1B1C1F; box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+  body.dark .add-input { background: #101113; border-color: var(--border); }
+  body.dark .item { background: #1E1F22; }
+  body.dark .item:hover { border-color: var(--border); }
+  body.dark .checkbox { background: #101113; border-color: var(--border); }
+  body.dark .delete-btn { color: #5A5A55; }
+  body.dark .stats span { color: #7FC198; }
+  body.dark .toast { background: #ECE9E2; color: #17181B; }
 </style>
 </head>
 <body>
+<script>
+  if (localStorage.getItem('darkMode') === '1') document.body.classList.add('dark');
+</script>
 
 <header>
   <div class="header-top">
@@ -245,7 +268,10 @@
       <h1>Familie Te Vrede</h1>
       <span class="weekend-label">BBQ reünie · 23 augustus 🍖</span>
     </div>
-    <a class="nav-btn" href="https://www.google.com/maps/dir/?api=1&destination=Ouderkerkerplas+Strand&destination_place_id=ChIJ9QRyoA4LxkcRyKNPEBXvTR0" onclick="return openNav(event)">🧭 Navigatie strandje</a>
+    <div class="header-actions">
+      <button class="nav-btn" id="darkToggle" onclick="toggleDark()">🌙</button>
+      <a class="nav-btn" href="https://www.google.com/maps/dir/?api=1&destination=Ouderkerkerplas+Strand&destination_place_id=ChIJ9QRyoA4LxkcRyKNPEBXvTR0" onclick="return openNav(event)">🧭 Navigatie strandje</a>
+    </div>
   </div>
   <div class="stats" id="stats">Laden…</div>
 </header>
@@ -363,6 +389,16 @@
     render();
     await saveItems();
     input.focus();
+  }
+
+  function toggleDark() {
+    document.body.classList.toggle('dark');
+    const isDark = document.body.classList.contains('dark');
+    localStorage.setItem('darkMode', isDark ? '1' : '0');
+    document.getElementById('darkToggle').textContent = isDark ? '☀️' : '🌙';
+  }
+  if (document.body.classList.contains('dark')) {
+    document.getElementById('darkToggle').textContent = '☀️';
   }
 
   function openNav(e) {
