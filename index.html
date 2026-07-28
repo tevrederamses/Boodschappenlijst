@@ -245,7 +245,7 @@
       <h1>Familie Te Vrede</h1>
       <span class="weekend-label">BBQ reünie · 23 augustus 🍖</span>
     </div>
-    <a class="nav-btn" href="https://www.google.com/maps/dir/?api=1&destination=52.2949966,4.9295992" onclick="return openNav(event)">🧭 Navigatie strandje</a>
+    <a class="nav-btn" href="https://www.google.com/maps/dir/?api=1&destination=Ouderkerkerplas+Strand&destination_place_id=ChIJ9QRyoA4LxkcRyKNPEBXvTR0" onclick="return openNav(event)">🧭 Navigatie strandje</a>
   </div>
   <div class="stats" id="stats">Laden…</div>
 </header>
@@ -369,9 +369,9 @@
     e.preventDefault();
     const isAndroid = /Android/i.test(navigator.userAgent);
     if (isAndroid) {
-      window.location.href = 'google.navigation:q=52.2949966,4.9295992&mode=d';
+      window.location.href = 'google.navigation:q=Ouderkerkerplas+Strand,+Ouderkerk+aan+de+Amstel&mode=d';
     } else {
-      window.open('https://www.google.com/maps/dir/?api=1&destination=52.2949966,4.9295992', '_blank');
+      window.open('https://www.google.com/maps/dir/?api=1&destination=Ouderkerkerplas+Strand&destination_place_id=ChIJ9QRyoA4LxkcRyKNPEBXvTR0', '_blank');
     }
     return false;
   }
