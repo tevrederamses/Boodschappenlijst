@@ -266,10 +266,10 @@
   <div class="header-top">
     <div class="header-title">
       <h1>Familie Te Vrede</h1>
-      <span class="weekend-label">BBQ reünie · 23 augustus 🍖</span>
+      <span class="weekend-label">BBQ reünie · za 23 augustus 🍖</span>
     </div>
     <div class="header-actions">
-      <button class="nav-btn" id="darkToggle" onclick="toggleDark()">🌙</button>
+      <button class="nav-btn" id="darkToggle" onclick="toggleDark()">🌙 Dark</button>
       <a class="nav-btn" href="https://www.google.com/maps/dir/?api=1&destination=Ouderkerkerplas+Strand&destination_place_id=ChIJ9QRyoA4LxkcRyKNPEBXvTR0" onclick="return openNav(event)">🧭 Navigatie strandje</a>
     </div>
   </div>
@@ -395,10 +395,10 @@
     document.body.classList.toggle('dark');
     const isDark = document.body.classList.contains('dark');
     localStorage.setItem('darkMode', isDark ? '1' : '0');
-    document.getElementById('darkToggle').textContent = isDark ? '☀️' : '🌙';
+    document.getElementById('darkToggle').textContent = isDark ? '☀️ Light' : '🌙 Dark';
   }
   if (document.body.classList.contains('dark')) {
-    document.getElementById('darkToggle').textContent = '☀️';
+    document.getElementById('darkToggle').textContent = '☀️ Light';
   }
 
   function openNav(e) {
