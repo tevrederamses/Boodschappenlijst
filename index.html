@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Familie Te Vrede BBQ 🍖</title>
+<title>Reünie BBQ Familie Te Vrede 2026 🍖</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -38,18 +38,19 @@
 
   .header-top {
     display: flex;
-    align-items: baseline;
+    align-items: flex-start;
     justify-content: space-between;
     gap: 10px;
     margin-bottom: 4px;
   }
 
-  .header-title { display: flex; align-items: baseline; gap: 10px; }
+  .header-title { display: flex; flex-direction: column; gap: 4px; }
 
   h1 {
     font-family: 'Fraunces', serif;
     font-weight: 300;
-    font-size: 26px;
+    font-size: 22px;
+    line-height: 1.25;
     letter-spacing: -0.5px;
   }
 
@@ -58,6 +59,13 @@
     font-style: italic;
     font-size: 14px;
     color: rgba(245,240,232,0.88);
+  }
+
+  .location-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(245,240,232,0.75);
   }
 
   .stats {
@@ -265,8 +273,9 @@
 <header>
   <div class="header-top">
     <div class="header-title">
-      <h1>Familie Te Vrede</h1>
-      <span class="weekend-label">BBQ reünie · za 23 augustus 🍖</span>
+      <h1>Reünie BBQ<br>Familie Te Vrede</h1>
+      <span class="weekend-label">za 23 augustus 2026 🍖</span>
+      <span class="location-label">📍 Ouderkerkerplas</span>
     </div>
     <div class="header-actions">
       <button class="nav-btn" id="darkToggle" onclick="toggleDark()">🌙 Dark</button>
